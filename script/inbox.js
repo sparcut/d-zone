@@ -84,6 +84,7 @@ Inbox.prototype.getUsers = function(connectRequest) {
     var discordServer = this.bot.servers[server.discordID], users = {};
     for(var uid in discordServer.members) { if(!discordServer.members.hasOwnProperty(uid)) continue;
         var member = discordServer.members[uid];
+        if(member.status == 'offline' || typeof member.status == 'undefined') continue;
         users[uid] = {
             id: member.id,
             username: member.nick || member.username,

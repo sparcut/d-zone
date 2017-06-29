@@ -175,6 +175,7 @@ function initWebsocket() {
             game.renderer.canvases[0].onResize();
         } else if(data.type == 'presence') { // User status update
             if(!users.actors[data.data.uid]) return;
+            // if(data.data.status == 'offline') return users.removeActor(users.actors[data.data.uid]);
             users.actors[data.data.uid].updatePresence(data.data.status);
         } else if(data.type == 'message') { // Chatter
             users.queueMessage(data.data);
