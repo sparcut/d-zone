@@ -42,6 +42,7 @@ Wander.prototype.impulseComplete = function() {
 };
 
 Wander.prototype.detach = function() { // Detach behavior from actor
+    if(!this.actor) return;
     this.actor.removeListener('movecomplete',this.impulseCompleteBound);
     this.actor.removeFromSchedule(this.impulseBound);
     delete this.actor;

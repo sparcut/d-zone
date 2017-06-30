@@ -36,6 +36,20 @@ function Inbox(config) {
         console.log('Connected to',Object.keys(self.servers).length-1, 'server(s)');
         self.emit('connected');
         require('fs').writeFileSync('./bot.json', JSON.stringify(bot, null, '\t'));
+        
+        // setInterval(() => {
+        //   for(var loopy = 500; loopy > 0; loopy-- ) {
+        //       self.emit('message', {
+        //           type: 'message',
+        //           servers: [ '329931821988970498' ],
+        //           data: {
+        //             uid: Math.floor(Math.random() * 2500 + 1),
+        //             message: 'Cx',
+        //             channel: 'general'
+        //           }  
+        //       });
+        //   }
+        // }, 500)
     });
     bot.on('message', function(user, userID, channelID, message, rawEvent) {
         if(!bot.channels[channelID]) return;
@@ -84,7 +98,8 @@ Inbox.prototype.getUsers = function(connectRequest) {
     var discordServer = this.bot.servers[server.discordID], users = {};
     for(var uid in discordServer.members) { if(!discordServer.members.hasOwnProperty(uid)) continue;
         var member = discordServer.members[uid];
-        if(member.status == 'offline' || typeof member.status == 'undefined') continue;
+        // If offline don't send
+        if(/*!(member.roles.includes('330230766766260234')) ||*/ member.status == 'idle' || member.status == 'offline' || typeof member.status == 'undefined') continue;
         users[uid] = {
             id: member.id,
             username: member.nick || member.username,
@@ -99,6 +114,16 @@ Inbox.prototype.getUsers = function(connectRequest) {
             rolePosition = role.position;
         }
     }
+    
+    // for(var fakeUID = 2500; fakeUID > 0; fakeUID--) {
+    //   users[fakeUID] = {
+    //     id: fakeUID,
+    //     roleColor: '#473FCD',
+    //     status: 'online',
+    //     username: 'TriHard'
+    //   }
+    // }
+    
     return { server: server, userList: users };
 };
 

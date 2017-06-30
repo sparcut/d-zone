@@ -155,6 +155,7 @@ function initWebsocket() {
             decorator = new Decorator(game, world);
             game.decorator = decorator;
             users = new Users(game, world);
+            // window.dUsers = users
             var params = '?s=' + data.data.request.server;
             if(data.data.request.password) params += '&p=' + data.data.request.password;
             if(window.location.protocol != 'file:') window.history.replaceState(
@@ -164,9 +165,10 @@ function initWebsocket() {
             //console.log('Initializing actors',data.data);
             game.setMaxListeners(Object.keys(userList).length + 50);
             users.setMaxListeners(Object.keys(userList).length);
+            // console.log(userList);
             for(var uid in userList) { if(!userList.hasOwnProperty(uid)) continue;
                 //if(uid != '86913608335773696') continue;
-                //if(data.data[uid].status != 'online') continue;
+                // if(data.data[uid].status != 'online') continue;
                 if(!userList[uid].username) continue;
                 users.addActor(userList[uid]);
                 //break;
@@ -175,8 +177,14 @@ function initWebsocket() {
             game.renderer.canvases[0].onResize();
         } else if(data.type == 'presence') { // User status update
             if(!users.actors[data.data.uid]) return;
-            // if(data.data.status == 'offline') return users.removeActor(users.actors[data.data.uid]);
-            users.actors[data.data.uid].updatePresence(data.data.status);
+            console.log(users);
+            if(data.data.status == 'offline' || typeof data.data.status == 'undefined'){ 
+              users.removeActor(users.actors[data.data.uid]);
+            } else {
+              users.actors[data.data.uid].updatePresence(data.data.status);  
+            }
+            
+            console.log(users);
         } else if(data.type == 'message') { // Chatter
             users.queueMessage(data.data);
         } else if(data.type == 'error') {
